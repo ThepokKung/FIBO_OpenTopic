@@ -13,7 +13,7 @@ from robot_interfaces.srv import Station2GO, SetID, RobotStationCheck, RobotStat
 from std_srvs.srv import SetBool
 from rclpy.action import ActionClient
 from rclpy.executors import MultiThreadedExecutor
-from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
+from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallbackGroup
 
 class StationNavigationAndDocking(Node):
     def __init__(self):
@@ -25,11 +25,19 @@ class StationNavigationAndDocking(Node):
         self.station_list = self.load_station(path_file)
 
         # Create a service for single-station navigation
+        # self.station_service = self.create_service(
+        #     Station2GO,
+        #     '/station_2go',
+        #     self.station_callback
+        # )
+        self.station_service_cbg = ReentrantCallbackGroup()
         self.station_service = self.create_service(
             Station2GO,
             '/station_2go',
-            self.station_callback
+            self.station_callback,
+            callback_group=self.station_service_cbg
         )
+        
 
         # Create action client for Nav2 navigation
         self.navigate_action_client = ActionClient(self, NavigateToPose, '/navigate_to_pose')
@@ -86,6 +94,7 @@ class StationNavigationAndDocking(Node):
     def station_callback(self, request, response):
         """Service callback for /station_2go."""
         target_station = request.station
+        self.get_logger().info(f"Starting process for station: {target_station}")
 
         # Check if robot state allows navigation
         robot_state = self.check_robot_state()
@@ -108,6 +117,7 @@ class StationNavigationAndDocking(Node):
         
         # Run navigation and docking in a separate thread
         threading.Thread(target=self.process_station, args=(station,), daemon=True).start()
+        self.get_logger().info(f"Finished process for station: {target_station}")
         return response
 
     def process_station(self, station):

@@ -11,6 +11,9 @@ class RobotStateNode(Node):
         # Robot's current station (default to None)
         self.current_state = "None"
         self.current_station = "None"
+        
+        # Status of the robot
+        self.lift_status = False
 
         # Service to update the robot's station
         self.robot_state_update = self.create_service(RobotStateUpdate,'update_robot_state',self.update_robot_state_callback) 
@@ -18,6 +21,9 @@ class RobotStateNode(Node):
 
         self.robot_station_update = self.create_service(RobotStationUpdate,'update_robot_station',self.update_station_callback)
         self.robot_station_check = self.create_service(RobotStationCheck,'check_robot_station',self.check_station_callback)
+
+        # Service for update robot status
+        self.robot_lift_status = self.create_service(SetBool,'update_robot_stati',self.robot_life_status_callback)
 
         self.get_logger().info("Robot State Node is running...")
 
@@ -64,7 +70,6 @@ class RobotStateNode(Node):
         response.message = f"Robot is currently station at: {self.current_station}"
         self.get_logger().info(f"Robot is currently station at: '{self.current_station}'")
         return response
-
 
 def main(args=None):
     rclpy.init(args=args)

@@ -66,8 +66,6 @@ class MultiStationNavigationAndDocking(Node):
             self.get_logger().info('Waiting for /docking_with_aruco service...')
         while not self.docking_status_client.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('Waiting for /docking_status service...')
-        
-
         while not self.robot_station_check.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('Waiting for /check_robot_station service...')
         while not self.robot_station_update.wait_for_service(timeout_sec=1.0):

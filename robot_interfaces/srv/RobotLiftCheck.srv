@@ -1,0 +1,5 @@
+bool checklift
+---
+bool success  
+bool lift_status
+string message

@@ -36,6 +36,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/RobotStateUpdate.srv"
   "srv/RobotStationCheck.srv"
   "srv/RobotStationUpdate.srv"
+  "srv/RobotLiftCheck.srv"
+  "srv/RobotLiftUpdate.srv"
   DEPENDENCIES geometry_msgs std_msgs 
 )
 
