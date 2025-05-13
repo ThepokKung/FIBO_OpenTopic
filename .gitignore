@@ -1,1 +1,5 @@
 /.vscode
+/mir_robot
+/ira_laser_tools
+/aws-robomaker-small-warehouse-world
+/twist_stamper
