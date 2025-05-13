@@ -6,6 +6,7 @@ def generate_launch_description():
     robot_nav_pkg = 'robot_nav'
     robot_con_pkg = 'robot_controller'
     robot_det_pkg = 'robot_detection'
+    robot_plo_pkg = 'robot_plot'
 
     launch_description = LaunchDescription()
 
@@ -48,5 +49,13 @@ def generate_launch_description():
             name='robot_state_node',
         )
     launch_description.add_action(robot_state_node)
+
+    robot_plot_node = Node(
+            package=robot_plo_pkg,
+            namespace='',
+            executable='plotmap.py',
+            name='robot_plot_node',
+        )
+    launch_description.add_action(robot_plot_node)
     
     return launch_description

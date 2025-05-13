@@ -38,7 +38,7 @@
   x: -3.8
   y: 9.2
   yaw: 0.785
-- name: Station9
+- name: ChangeStation
   aruco_id: 8
   x: -5.2
   y: 9.2
