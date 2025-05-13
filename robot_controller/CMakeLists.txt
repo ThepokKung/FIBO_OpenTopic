@@ -30,6 +30,7 @@ install(PROGRAMS
   # scripts/dummy_script.py
   scripts/robot_state.py
   scripts/battery_monitor_node.py
+  scripts/lift_controller.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from std_srvs.srv import SetBool
-from robot_interfaces.srv import RobotStateUpdate,RobotStateCheck,RobotStationCheck,RobotStationUpdate
+from robot_interfaces.srv import RobotStateUpdate,RobotStateCheck,RobotStationCheck,RobotStationUpdate,RobotLiftCheck,RobotLiftUpdate
 
 class RobotStateNode(Node):
     def __init__(self):
@@ -23,7 +22,8 @@ class RobotStateNode(Node):
         self.robot_station_check = self.create_service(RobotStationCheck,'check_robot_station',self.check_station_callback)
 
         # Service for update robot status
-        self.robot_lift_status = self.create_service(SetBool,'update_robot_stati',self.robot_life_status_callback)
+        self.robot_lift_update = self.create_service(RobotLiftUpdate, 'update_lift_status', self.robot_lift_update_callback)
+        self.robot_lift_check = self.create_service(RobotLiftCheck, 'check_lift_status', self.robot_lift_check_callback)
 
         self.get_logger().info("Robot State Node is running...")
 
@@ -69,6 +69,30 @@ class RobotStateNode(Node):
         response.success = True
         response.message = f"Robot is currently station at: {self.current_station}"
         self.get_logger().info(f"Robot is currently station at: '{self.current_station}'")
+        return response
+    
+    def robot_lift_update_callback(self, request, response):
+        """
+        Callback function to update the robot's lift status.
+        """
+        self.lift_status = request.lift_status
+        self.get_logger().info(f"Robot lift status updated to: {self.lift_status}")
+        
+        # Return response
+        response.success = True
+        response.message = f"Updated lift status to {self.lift_status}"
+        return response
+    
+    def robot_lift_check_callback(self, request, response):
+        """
+        Callback function to check the robot's lift status.
+        """
+        response.lift_status = self.lift_status
+        self.get_logger().info(f"Robot lift status is: {self.lift_status}")
+        
+        # Return response
+        response.success = True
+        response.message = f"Lift status is {self.lift_status}"
         return response
 
 def main(args=None):

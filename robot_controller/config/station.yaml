@@ -1,20 +1,45 @@
-- name: ChangeStation 
+- name: Station1
   aruco_id: 0
-  x: 1.75
+  x: 1.83
   y: -8.0
   yaw: -0.785
 - name: Station2
-  aruco_id: 2
-  x: 4.2
-  y: 2.0
+  aruco_id: 1
+  x: 5.7
+  y: -9.5
   yaw: 0.0
 - name: Station3
-  aruco_id: 3
-  x: 1.65
-  y: 7.9
-  yaw: 0.785
+  aruco_id: 2
+  x: 5.7
+  y: -6.3
+  yaw: 0.0
 - name: Station4
+  aruco_id: 3
+  x: 5.7
+  y: -1.2
+  yaw: 0.0
+- name: Station5
   aruco_id: 4
-  x: -3.7
-  y: 8.2
+  x: 5.7
+  y: 2.2
+  yaw: 0.0
+- name: Station6
+  aruco_id: 5
+  x: 5.7
+  y: 6.39
+  yaw: 0.0
+- name: Station7
+  aruco_id: 6
+  x: 1.78
+  y: 9.3
+  yaw: 0.785
+- name: Station8
+  aruco_id: 7
+  x: -3.8
+  y: 9.2
+  yaw: 0.785
+- name: Station9
+  aruco_id: 8
+  x: -5.2
+  y: 9.2
   yaw: 0.785

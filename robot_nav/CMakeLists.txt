@@ -30,6 +30,7 @@ install(PROGRAMS
   # scripts/dummy_script.py
   scripts/nav2_go.py
   scripts/inspection_node.py
+  scripts/inspection_node2.py
   scripts/station_navigator.py
   DESTINATION lib/${PROJECT_NAME}
 )

@@ -373,4 +373,4 @@ filter_mask_server:
     use_sim_time: true
     frame_id: "map"
     topic_name: "/keepout_filter_mask"
-    yaml_filename: "/home/kraiwich/fra532_lecture5_ws/src/fra532_nav/maps/map_nav.yaml"
+    yaml_filename: "/home/kraiwich/OpenTopic_ws/src/robot_nav/maps/map_nav.yaml"
