@@ -9,6 +9,7 @@ import cv2.aruco as aruco
 import numpy as np
 from std_srvs.srv import SetBool
 from robot_interfaces.srv import SetID
+from std_msgs.msg import Bool
 import message_filters
 from rclpy.qos import qos_profile_sensor_data
 import sensor_msgs_py.point_cloud2 as pc2
@@ -41,6 +42,7 @@ class ArucoDocker(Node):
         # Publishers
         self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
         self.aruco_vision_pub = self.create_publisher(Image, '/ArUco_vision', 10)
+        self.aruco_idone_pub = self.create_publisher(Bool, '/aruco_idone', 10)  # Changed from bool to Bool
 
         # Services
         self.srv = self.create_service(
@@ -178,6 +180,8 @@ class ArucoDocker(Node):
                                 status = "DOCKED!"
                                 self.docking_aruco_status = True
                                 self.docking_enabled = False
+                                self.aruco_idone_pub.publish(Bool(data=True))
+
 
                             elif distance > self.target_distance:
                                 cmd_vel.linear.x = self.Kp_linear * \

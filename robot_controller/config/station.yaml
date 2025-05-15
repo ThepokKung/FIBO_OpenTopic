@@ -1,45 +1,45 @@
 - name: Station1
   aruco_id: 0
-  x: 1.83
-  y: -8.0
+  x: 1.82
+  y: -8.5
   yaw: -0.785
 - name: Station2
   aruco_id: 1
-  x: 5.7
+  x: 5.3
   y: -9.5
   yaw: 0.0
 - name: Station3
   aruco_id: 2
-  x: 5.7
-  y: -6.3
+  x: 5.3
+  y: -6.38
   yaw: 0.0
 - name: Station4
   aruco_id: 3
-  x: 5.7
-  y: -1.2
+  x: 5.3
+  y: -1.22
   yaw: 0.0
 - name: Station5
   aruco_id: 4
-  x: 5.7
+  x: 5.3
   y: 2.2
   yaw: 0.0
 - name: Station6
   aruco_id: 5
-  x: 5.7
-  y: 6.39
+  x: 5.3
+  y: 6.35
   yaw: 0.0
 - name: Station7
   aruco_id: 6
-  x: 1.78
-  y: 9.3
+  x: 1.77
+  y: 8.5
   yaw: 0.785
 - name: Station8
   aruco_id: 7
-  x: -3.8
-  y: 9.2
+  x: -3.78
+  y: 8.5
   yaw: 0.785
 - name: ChangeStation
   aruco_id: 8
-  x: -5.2
-  y: 9.2
-  yaw: 0.785
+  x: -5.3
+  y: 9.28
+  yaw: -1.57

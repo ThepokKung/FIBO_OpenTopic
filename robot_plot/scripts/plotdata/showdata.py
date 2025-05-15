@@ -152,7 +152,7 @@ def plot_trajectories_comparison(data):
 def main():
     # The JSON file is assumed to be in the same directory as this script,
     # or adjust the path accordingly.
-    json_filename = os.path.join(os.path.dirname(__file__), "plot_data.json")
+    json_filename = os.path.join(os.path.dirname(__file__), "data/plot_data.json")
     data = load_plot_data(json_filename)
 
     # Plot comprehensive comparison

@@ -29,6 +29,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   # scripts/dummy_script.py
   scripts/plotmap.py
+  scripts/plot_log_aruco.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
