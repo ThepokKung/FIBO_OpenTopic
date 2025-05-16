@@ -42,7 +42,8 @@ class ArucoDocker(Node):
         # Publishers
         self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
         self.aruco_vision_pub = self.create_publisher(Image, '/ArUco_vision', 10)
-        self.aruco_idone_pub = self.create_publisher(Bool, '/aruco_idone', 10)  # Changed from bool to Bool
+        self.aruco_idone_pub = self.create_publisher(Bool, '/aruco_idone', 10)  
+        self.aruco_docking_start_pub = self.create_publisher(Bool,'/aruco_docking_start',10)
 
         # Services
         self.srv = self.create_service(
@@ -85,6 +86,8 @@ class ArucoDocker(Node):
         self.docking_enabled = request.data
         response.success = True
         response.message = f"Docking {'enabled' if self.docking_enabled else 'disabled'}"
+        if self.docking_enabled:
+            self.aruco_docking_start_pub.publish(Bool(data=True))
         return response
 
     def set_target_id_callback(self, request, response):

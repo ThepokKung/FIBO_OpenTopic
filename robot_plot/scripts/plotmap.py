@@ -5,10 +5,12 @@ from rclpy.node import Node
 import json
 import threading
 from nav_msgs.msg import Odometry
-from std_srvs.srv import Trigger
+from std_srvs.srv import Trigger, SetBool
+from std_msgs.msg import Bool
 from rclpy.qos import QoSProfile, QoSDurabilityPolicy, QoSHistoryPolicy, QoSReliabilityPolicy
 import os
-import message_filters  # Add this import
+import message_filters
+import time
 
 class PlotMapNode(Node):
     def __init__(self):
@@ -19,6 +21,11 @@ class PlotMapNode(Node):
         
         # File handlers for streaming data
         self.combined_file = None
+        
+        # Docking related data
+        self.docking_events = []
+        self.docking_started = False
+        self.docking_start_time = None
         
         # Use QoS profiles to reduce message frequency
         qos = QoSProfile(
@@ -42,6 +49,56 @@ class PlotMapNode(Node):
         # Create services
         self.create_service(Trigger, '/start_plot', self.start_plot_callback)
         self.create_service(Trigger, '/stop_plot', self.stop_plot_callback)
+        
+        # Subscribe to docking events
+        self.docking_start_sub = self.create_subscription(
+            Bool, '/aruco_docking_start', self.docking_start_callback, 10)
+        self.docking_done_sub = self.create_subscription(
+            Bool, '/aruco_idone', self.docking_done_callback, 10)
+            
+        # Also monitor the docking status service calls
+        self.docking_client = self.create_client(SetBool, '/docking_aruco_status')
+
+    def docking_start_callback(self, msg):
+        """Called when docking is initiated"""
+        if msg.data and not self.docking_started:
+            self.docking_started = True
+            self.docking_start_time = time.time()
+            self.get_logger().info("Docking started")
+
+    def docking_done_callback(self, msg):
+        """Called when docking is completed"""
+        if msg.data and self.docking_started:
+            docking_end_time = time.time()
+            docking_duration = docking_end_time - self.docking_start_time
+            
+            # Create docking event record
+            docking_event = {
+                'start_time': self.docking_start_time,
+                'end_time': docking_end_time,
+                'duration': docking_duration,
+                'successful': True
+            }
+            
+            # Add to docking events list
+            self.docking_events.append(docking_event)
+            
+            # Log information
+            self.get_logger().info(f"Docking completed in {docking_duration:.2f} seconds")
+            
+            # Reset docking state
+            self.docking_started = False
+            self.docking_start_time = None
+            
+            # If we're saving data, write this event to the file as well
+            if self.saving_data and self.combined_file:
+                docking_record = {
+                    'stamp': docking_end_time,
+                    'event_type': 'docking_complete',
+                    'duration': docking_duration
+                }
+                self.combined_file.write(json.dumps(docking_record) + '\n')
+                self.combined_file.flush()
 
     def start_plot_callback(self, request, response):
         # Create output directory if it doesn't exist
@@ -82,6 +139,7 @@ class PlotMapNode(Node):
         # Prepare synchronized data record
         data = {
             'stamp': current_time,
+            'event_type': 'position_update',
             'odom': {
                 'x': odom_msg.pose.pose.position.x,
                 'y': odom_msg.pose.pose.position.y,
@@ -129,13 +187,18 @@ class PlotMapNode(Node):
     def process_data_file(self):
         """Process the JSONL file into a JSON file"""
         data_records = []
+        docking_records = []
         
         # Read data from file
         try:
             with open('plot_data/combined_data.jsonl', 'r') as f:
                 for line in f:
                     if line.strip():
-                        data_records.append(json.loads(line))
+                        record = json.loads(line)
+                        if record.get('event_type') == 'position_update':
+                            data_records.append(record)
+                        elif record.get('event_type') == 'docking_complete':
+                            docking_records.append(record)
         except Exception as e:
             self.get_logger().error(f"Error reading data: {str(e)}")
             
@@ -144,6 +207,7 @@ class PlotMapNode(Node):
             'timestamps': [record['stamp'] for record in data_records],
             'odom': [record['odom'] for record in data_records],
             'base_pose_ground_truth': [record['ground_truth'] for record in data_records],
+            'docking_events': docking_records
         }
         
         # Save processed data
