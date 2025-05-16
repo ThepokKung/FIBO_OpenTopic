@@ -4,3 +4,5 @@
 /aws-robomaker-small-warehouse-world
 /twist_stamper
 /robot_plot/scripts/plotdata/data
+/robot_plot/scripts/plotdata/convert
+log_of_arUco_position.json
